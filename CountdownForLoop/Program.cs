@@ -7,11 +7,42 @@ namespace CountdownForLoop
 {
     class Program
     {
+        private static void FileGame()
+        {
+            Debug.WriteLine("TEST");
+            string text_raw = System.IO.File.ReadAllText(@"C:\temp\datafile.txt");
+            //Debug.WriteLine(text_raw);
+            string[] scores_temp = text_raw.Split(' ');
+            int[] scoresIntArray = Array.ConvertAll(scores_temp, Int32.Parse);
+            Debug.WriteLine("-------------------------------------------------------------------");
+
+        }
         static void Main(string[] args)
         {
+            FileGame();
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+            // Select which tests to run
+            //var runHackerRankTC1 = true;
+            //var runHackerRankTC1Subset = true;
+            //var runHJRTestSet1 = true;
+            //var runHJRTestSet2 = true;
+
+            var runHackerRankTC1 = false;
+            var runHackerRankTC1Subset = false;
+            var runHJRTestSet1 = false;
+            var runHJRTestSet2 = false;
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+            var testsAllPassed = true;
+            var numberOfTestSetsRun = 0;
+            
             ////////////////////////////////////////////////////////////////////////////////
             // Hackerrank Test Case 1
             ////////////////////////////////////////////////////////////////////////////////
+
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("Hackerrank Test Case 1");
             var scores_raw = "295 294 291 287 287 285 285 284 283 279 277 274 274 271 270 268 268 268 264 260 259 258 257 255 252 250 244 241 240 237 236 236 231 227 227 227 226 225 224 223 216 212 200 197 196 194 193 189 188 187 183 182 178 177 173 171 169 165 143 140 137 135 133 130 130 130 128 127 122 120 116 114 113 109 106 103 99 92 85 81 69 68 63 63 63 61 57 51 47 46 38 30 28 25 22 15 14 12 6 4";
@@ -36,11 +67,18 @@ namespace CountdownForLoop
                 expectedResultTC1
             };
 
-            RunTests(scoresTC1, aliceScoresArrayOfArraysTC1, expectedResultsArrayOfArraysTC1);
+            var runSuccessTC1 = false;
+            if (runHackerRankTC1)
+            {
+                runSuccessTC1 = RunTests(scoresTC1, aliceScoresArrayOfArraysTC1, expectedResultsArrayOfArraysTC1);
+                if (!runSuccessTC1)
+                    testsAllPassed = false;
+            }          
 
             ////////////////////////////////////////////////////////////////////////////////
             // Hackerrank Test Case 1 subset
             ////////////////////////////////////////////////////////////////////////////////
+
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("Hackerrank Test Case 1S");
             
@@ -68,11 +106,19 @@ namespace CountdownForLoop
                 expectedResultTC1S
             };
 
-            RunTests(scoresTC1S, aliceScoresArrayOfArraysTC1S, expectedResultsArrayOfArraysTC1S);
+            var runSuccessTC1S = false;
+            if (runHackerRankTC1Subset)
+            {
+                numberOfTestSetsRun++;
+                runSuccessTC1S = RunTests(scoresTC1S, aliceScoresArrayOfArraysTC1S, expectedResultsArrayOfArraysTC1S);
+                if (!runSuccessTC1S)
+                    testsAllPassed = false;
+            }          
 
             ////////////////////////////////////////////////////////////////////////////////
             // HJR Test set 1
-            ////////////////////////////////////////////////////////////////////////////////            
+            ////////////////////////////////////////////////////////////////////////////////     
+            
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("HJR Test Set 1");
             int[] scoresHJR = { 100, 100, 50, 40, 40, 20, 10 };
@@ -94,50 +140,90 @@ namespace CountdownForLoop
             int[] alice7 = { 2, 3, 10, 30, 75, 75, 100 };
             int[] expectedResult7 = { 6, 6, 5, 4, 2, 2, 1 };
 
-            int[][] aliceScoresArrayOfArraysHJR = new int[][]
+            int[][] aliceScoresArrayOfArraysHJRTestSet1 = new int[][]
             {
                 alice0, alice1, alice2, alice3, alice4, alice5, alice6, alice7
-            };
+            };            
 
-            //  int[][] aliceScoresArrayOfArrays = new int[][]
-            //{
-            //      alice7
-            //};
-
-            int[][] expectedResultsArrayOfArraysHJR = new int[][]
+            int[][] expectedResultsArrayOfArraysHJRTestSet1 = new int[][]
             {
                 expectedResult0, expectedResult1, expectedResult2, expectedResult3, expectedResult4, expectedResult5, expectedResult6, expectedResult7
             };
 
-            //          int[][] expectedResultsArrayOfArrays = new int[][]
-            //{
-            //              expectedResult7
-            //};
-
-            RunTests(scoresHJR, aliceScoresArrayOfArraysHJR, expectedResultsArrayOfArraysHJR);
+            var runSuccessHJRTestSet1 = false;
+            if (runHJRTestSet1)
+            {
+                numberOfTestSetsRun++;
+                runSuccessHJRTestSet1 = RunTests(scoresHJR, aliceScoresArrayOfArraysHJRTestSet1, expectedResultsArrayOfArraysHJRTestSet1);
+                if (!runSuccessHJRTestSet1)
+                    testsAllPassed = false;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////
             // HJR Test set 2
             //////////////////////////////////////////////////////////////////////////////// 
+
             Debug.WriteLine("-------------------------------------------------------------------");
-            Debug.WriteLine("HJR Test Set 2");
+            Debug.Write("HJR Test Set 2");
+            if (!runHJRTestSet2)
+                Debug.Write(" - not run \n");
+            else
+                Debug.Write("\n");
+
             int[] scoresHJRTS2 = { 100, 100, 50, 40, 40, 20, 10 };
             int[] aliceHJRTS2 = { 1, 2, 3, 4, 5 };          
             int[] expectedResultHJRTS2 = { 6, 6, 6, 6, 6 };
 
-            int[][] aliceScoresArrayOfArraysHJRTS2 = new int[][]
+            int[][] aliceScoresArrayOfArraysHJRTestSet2 = new int[][]
             {
                aliceHJRTS2
             };
-            int[][] expectedResultsArrayOfArraysHJRTS2 = new int[][]
+            int[][] expectedResultsArrayOfArraysHJRTestSet2 = new int[][]
             {
                 expectedResultHJRTS2
             };
-            RunTests(scoresHJRTS2, aliceScoresArrayOfArraysHJRTS2, expectedResultsArrayOfArraysHJRTS2);
+
+            var runSuccessHJRTS2 = false;
+            if (runHJRTestSet2)
+            {
+                numberOfTestSetsRun++;
+                runSuccessHJRTS2 = RunTests(scoresHJRTS2, aliceScoresArrayOfArraysHJRTestSet2, expectedResultsArrayOfArraysHJRTestSet2);
+
+                if (!runSuccessHJRTS2)
+                    testsAllPassed = false;
+            }
+
+            //////////////////////////////////////////////////////////////////////////////// 
+
+            // Summarise
+
+            if (!testsAllPassed)
+            {
+                Debug.WriteLine("*********************************************************************");
+                Debug.WriteLine("********************** There are test failures ********************** ");
+                Debug.WriteLine("*********************************************************************");
+            }
+            else
+            {
+                if (numberOfTestSetsRun > 0)
+                {
+                    Debug.WriteLine("-------------------------------------------------------------------");
+                    Debug.WriteLine(numberOfTestSetsRun + " tests run. All tests passed ok");
+                    Debug.WriteLine("-------------------------------------------------------------------");
+                }
+                else
+                {
+                    Debug.WriteLine("-------------------------------------------------------------------");
+                    Debug.WriteLine("No tests run");
+                    Debug.WriteLine("-------------------------------------------------------------------");
+                }
+                
+            }             
         }
 
-        private static void RunTests(int[] scores, int[][] aliceScoresArrayOfArrays, int[][] expectedResultsArrayOfArrays)
+        private static bool RunTests(int[] scores, int[][] aliceScoresArrayOfArrays, int[][] expectedResultsArrayOfArrays)
         {
+            bool testPassed = false;
             int count = 0;
             foreach (int[] aliceScoreArray in aliceScoresArrayOfArrays)
             {
@@ -145,13 +231,18 @@ namespace CountdownForLoop
                 var expectedResultsArray = expectedResultsArrayOfArrays[count];
                 bool isEqual = Enumerable.SequenceEqual(result, expectedResultsArray);
                 if (isEqual)
-                    Debug.WriteLine(count + " Test passed");
+                {
+                    Debug.WriteLine("Test index: " + count + " - Test passed");
+                    testPassed = true;
+                }
+                   
                 else
                 {
                     Debug.WriteLine("**** " + count + " Test failed. Expected \n" + String.Join(" ", expectedResultsArray) + "\n" + String.Join(" ", result) + " ****");
                 }
                 count++;
-            }            
+            }
+            return testPassed;
         }
 
         private static int[] climbingLeaderboard(int[] scores, int[] alice)
