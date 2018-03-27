@@ -74,7 +74,7 @@ namespace CountdownForLoop
             // HJR Test set 1
             ////////////////////////////////////////////////////////////////////////////////            
             Debug.WriteLine("-------------------------------------------------------------------");
-            Debug.WriteLine("HJR Test Cases");
+            Debug.WriteLine("HJR Test Set 1");
             int[] scoresHJR = { 100, 100, 50, 40, 40, 20, 10 };
 
             int[] alice0 = { 5, 25, 50, 120 };
@@ -116,6 +116,24 @@ namespace CountdownForLoop
 
             RunTests(scoresHJR, aliceScoresArrayOfArraysHJR, expectedResultsArrayOfArraysHJR);
 
+            ////////////////////////////////////////////////////////////////////////////////
+            // HJR Test set 2
+            //////////////////////////////////////////////////////////////////////////////// 
+            Debug.WriteLine("-------------------------------------------------------------------");
+            Debug.WriteLine("HJR Test Set 2");
+            int[] scoresHJRTS2 = { 100, 100, 50, 40, 40, 20, 10 };
+            int[] aliceHJRTS2 = { 5, 4, 3, 2, 1 };
+            int[] expectedResultHJRTS2 = { 6, 6, 6, 6, 6 };
+
+            int[][] aliceScoresArrayOfArraysHJRTS2 = new int[][]
+            {
+               aliceHJRTS2
+            };
+            int[][] expectedResultsArrayOfArraysHJRTS2 = new int[][]
+            {
+                expectedResultHJRTS2
+            };
+            RunTests(scoresHJRTS2, aliceScoresArrayOfArraysHJRTS2, expectedResultsArrayOfArraysHJRTS2);
         }
 
         private static void RunTests(int[] scores, int[][] aliceScoresArrayOfArrays, int[][] expectedResultsArrayOfArrays)
@@ -133,8 +151,7 @@ namespace CountdownForLoop
                     Debug.WriteLine("**** " + count + " Test failed. Expected \n" + String.Join(" ", expectedResultsArray) + "\n" + String.Join(" ", result) + " ****");
                 }
                 count++;
-            }
-            Debug.WriteLine("-------------------------------------------------------------------");
+            }            
         }
 
         private static int[] climbingLeaderboard(int[] scores, int[] alice)
@@ -304,7 +321,11 @@ namespace CountdownForLoop
             else if (aliceScore < score)
             {
                 // The aliceScore is less than the current score so we can increase nextScoreRanking 
-                nextScoreRanking++;
+                if (!finalScoreRankingFound)
+                {
+                    nextScoreRanking++;
+                }
+                
 
                 //Start actions to prepare for the next unique score
                 scoresStartingIndex = FindNextUniqueScoreIndex(scoresStartingIndex, otherPeoplesScores);
@@ -326,7 +347,8 @@ namespace CountdownForLoop
                         var nextUniqueScoreIndex = FindNextUniqueScoreIndex(othersScoreIndex, otherPeoplesScores);
                         if (nextUniqueScoreIndex == -1)
                         {
-                            nextScoreRanking++;
+                            if (!finalScoreRankingFound)
+                                nextScoreRanking++;
                             aliceScoreRanking.Add(nextScoreRanking);
                             lastScoreRanking = nextScoreRanking;
                             finalScoreRankingFound = true;
