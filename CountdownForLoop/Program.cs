@@ -122,7 +122,7 @@ namespace CountdownForLoop
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("HJR Test Set 2");
             int[] scoresHJRTS2 = { 100, 100, 50, 40, 40, 20, 10 };
-            int[] aliceHJRTS2 = { 5, 4, 3, 2, 1 };
+            int[] aliceHJRTS2 = { 1, 2, 3, 4, 5 };          
             int[] expectedResultHJRTS2 = { 6, 6, 6, 6, 6 };
 
             int[][] aliceScoresArrayOfArraysHJRTS2 = new int[][]
@@ -208,12 +208,17 @@ namespace CountdownForLoop
                 {
                     // See if we're at the end of the list of other's scores
                     var nextUniqueScoreIndex = FindNextUniqueScoreIndex(scoresStartingIndex, scores);
-                    if (nextUniqueScoreIndex == -1)
+                    if (nextUniqueScoreIndex == -1 && count == 0)
                     {
                         nextScoreRanking++;
                         aliceScoreRanking.Add(nextScoreRanking);
                         lastScoreRanking = nextScoreRanking;
                         break;
+                    }
+                    else if (nextUniqueScoreIndex == -1 && count > 0)
+                    {
+                        aliceScoreRanking.Add(nextScoreRanking);
+                        FindNextImportantScore(ref alice, scores, ref scoresStartingIndex, aliceScore, ref aliceScoreRanking, ref nextScoreRanking, count, ref finalScoreRankingFound, ref lastScoreRanking);
                     }
 
                     //We now know the current aliceScore is less than the score at this index, so we can increase nextScoreRanking to reflect this
@@ -226,7 +231,8 @@ namespace CountdownForLoop
                     scoresStartingIndex = nextUniqueScoreIndex;
                     if (scoresStartingIndex == -1)
                     {
-                        nextScoreRanking++;
+                        if (!finalScoreRankingFound)
+                            nextScoreRanking++;
                         aliceScoreRanking.Add(nextScoreRanking);
                         lastScoreRanking = nextScoreRanking;
                         break;
@@ -290,15 +296,14 @@ namespace CountdownForLoop
                     }
 
                     if (nextUniqueOthersScoreIndex == othersScoreIndex + 1)
-                    {
-                        //hjr
+                    {                     
                        nextScoreRanking++;
                     }
                 }
             }
         }
 
-        private static void FindNextImportantScore(ref int[]alice, int[] otherPeoplesScores, ref int scoresStartingIndex, int aliceScore, ref List<int> aliceScoreRanking, ref int nextScoreRanking, int count, ref bool finalScoreRankingFound, ref int lastScoreRanking)
+        private static void FindNextImportantScore(ref int[]alice, int[] otherPeoplesScores, ref int scoresStartingIndex, int aliceScore, ref List<int> aliceScoreRanking, ref int nextScoreRanking, int count, ref bool finalOtherPeoplesScoreFound, ref int lastScoreRanking)
         {
             var score = otherPeoplesScores[scoresStartingIndex];
 
@@ -321,7 +326,7 @@ namespace CountdownForLoop
             else if (aliceScore < score)
             {
                 // The aliceScore is less than the current score so we can increase nextScoreRanking 
-                if (!finalScoreRankingFound)
+                if (!finalOtherPeoplesScoreFound)
                 {
                     nextScoreRanking++;
                 }
@@ -329,9 +334,12 @@ namespace CountdownForLoop
 
                 //Start actions to prepare for the next unique score
                 scoresStartingIndex = FindNextUniqueScoreIndex(scoresStartingIndex, otherPeoplesScores);
-             
-                //if (count != -1)
-                //{
+                if (scoresStartingIndex == -1)
+                {
+                    aliceScoreRanking.Add(nextScoreRanking);                   
+                    return;
+                }             
+        
                 for (int othersScoreIndex = scoresStartingIndex; othersScoreIndex < otherPeoplesScores.Length; othersScoreIndex++)
                 {
                     score = otherPeoplesScores[othersScoreIndex];
@@ -347,11 +355,11 @@ namespace CountdownForLoop
                         var nextUniqueScoreIndex = FindNextUniqueScoreIndex(othersScoreIndex, otherPeoplesScores);
                         if (nextUniqueScoreIndex == -1)
                         {
-                            if (!finalScoreRankingFound)
+                            if (!finalOtherPeoplesScoreFound)
                                 nextScoreRanking++;
                             aliceScoreRanking.Add(nextScoreRanking);
                             lastScoreRanking = nextScoreRanking;
-                            finalScoreRankingFound = true;
+                            finalOtherPeoplesScoreFound = true;
                             break;
                         }
                                 
