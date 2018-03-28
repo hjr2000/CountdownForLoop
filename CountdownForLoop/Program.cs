@@ -1,23 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace CountdownForLoop
 {
     class Program
     {
+        private static string GetParentDir(string baseDirectory)
+        {
+            var fileInfo = new FileInfo(baseDirectory);
+            var parentDir = fileInfo.Directory.Parent;
+            var parentDirName = parentDir.FullName;
+            return parentDirName;
+        }
+
+        private static string GetFullDataFilePath(string textFileName)
+        {
+            //Construct the file path where the image we're uploading is kept
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            var firstParentDirName = GetParentDir(baseDirectory);
+
+            var secondParentDirName = GetParentDir(firstParentDirName + "\\");
+
+            var finalFilePath = secondParentDirName + "\\TestData\\" + textFileName;
+            return finalFilePath;
+        }
+
         private static void HackerRankTestCase8()
         {
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("HackerRank Testcase 8");
-            string text_raw = System.IO.File.ReadAllText(@"C:\temp\othersscores.txt");
-            //Debug.WriteLine(text_raw);
+            string text_raw = File.ReadAllText(@GetFullDataFilePath("othersscores.txt"));
+
             string[] scores_temp = text_raw.Split(' ');
             long[] scoresIntArray = Array.ConvertAll(scores_temp, Int64.Parse);
 
-            string aliceScoresTextRaw = System.IO.File.ReadAllText(@"C:\temp\alicescores.txt");
-            //Debug.WriteLine(text_raw);
+            string aliceScoresTextRaw =File.ReadAllText(@GetFullDataFilePath("alicescor2es.txt"));
             string[] aliceScoresTemp = aliceScoresTextRaw.Split(' ');
             int[] aliceScoressIntArray = Array.ConvertAll(aliceScoresTemp, Int32.Parse);
 
@@ -53,7 +74,7 @@ namespace CountdownForLoop
             // Hackerrank Test Case 1 subset
             ////////////////////////////////////////////////////////////////////////////////
 
-            HackerRankTestCase1Subset(runHackerRankTC1Subset, ref testsAllPassed, ref numberOfTestSetsRun);
+            testsAllPassed = HackerRankTestCase1Subset(runHackerRankTC1Subset, ref numberOfTestSetsRun);
 
             ////////////////////////////////////////////////////////////////////////////////
             // HJR Test set 1
@@ -167,13 +188,13 @@ namespace CountdownForLoop
             }
         }
 
-        private static void HackerRankTestCase1Subset(bool runHackerRankTC1Subset, ref bool testsAllPassed, ref int numberOfTestSetsRun)
+        private static bool HackerRankTestCase1Subset(bool runHackerRankTC1Subset, ref int numberOfTestSetsRun)
         {
             Debug.WriteLine("-------------------------------------------------------------------");
             Debug.WriteLine("Hackerrank Test Case 1S");
 
             // ranking                                                                         13
-            //index                                                                    13      15                                                                     33
+            // index                                                                   13      15                                                                     33
             var scores_rawTC1S = "295 294 291 287 287 285 285 284 283 279 277 274 274 271 270 268 268 268 264 260 259 258 257 255 252 250 244 241 240 237 236 236 231 227 227 227 226 225 224 223 216 212 200 197 196 194 193 189 188 187 183 182 178 177 173 171 169 165 143 140 137 135 133 130 130 130 128 127 122 120 116 114 113 109 106 103 99 92 85 81 69 68 63 63 63 61 57 51 47 46 38 30 28 25 22 15 14 12 6 4";
             string[] scores_tempTC1S = scores_rawTC1S.Split(' ');
             long[] scoresTC1S = Array.ConvertAll(scores_tempTC1S, Int64.Parse);
@@ -202,8 +223,9 @@ namespace CountdownForLoop
                 numberOfTestSetsRun++;
                 runSuccessTC1S = RunTests(scoresTC1S, aliceScoresArrayOfArraysTC1S, expectedResultsArrayOfArraysTC1S);
                 if (!runSuccessTC1S)
-                    testsAllPassed = false;
+                    return false;
             }
+            return true;
         }
 
         private static bool HackerRankTestCase1(bool runHackerRankTC1, bool testsAllPassed)
@@ -278,6 +300,7 @@ namespace CountdownForLoop
 
             int[] resultIntArray = climbingLeaderboard(scores, aliceScoreArray);
 
+            // Diagnostic code
             var resultIndex = 0;
             foreach (int result in resultIntArray)
             {
@@ -342,7 +365,6 @@ namespace CountdownForLoop
                     // Find next valid index (i.e. scoresStartingIndex)
                     if (scoresStartingIndex != 0 && count > 0)
                     {
-
                         var nextAliceScore = alice[count -1];
                         if (!(nextAliceScore >= score))
                         {
