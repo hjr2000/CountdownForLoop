@@ -38,7 +38,7 @@ namespace CountdownForLoop
             string[] scores_temp = text_raw.Split(' ');
             long[] scoresIntArray = Array.ConvertAll(scores_temp, Int64.Parse);
 
-            string aliceScoresTextRaw =File.ReadAllText(@GetFullDataFilePath("alicescor2es.txt"));
+            string aliceScoresTextRaw =File.ReadAllText(@GetFullDataFilePath("alicescores.txt"));
             string[] aliceScoresTemp = aliceScoresTextRaw.Split(' ');
             int[] aliceScoressIntArray = Array.ConvertAll(aliceScoresTemp, Int32.Parse);
 
